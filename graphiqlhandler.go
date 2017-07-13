@@ -46,7 +46,13 @@ const htmlContent = `
 </html>
 `
 
-func Handler(rw http.ResponseWriter, r *http.Request) {
+type Handler struct{}
+
+func NewHandler() *Handler {
+	return &Handler{}
+}
+
+func (h *Handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if _, err := io.Copy(rw, strings.NewReader(htmlContent)); err != nil {
 		panic(err)
 	}
