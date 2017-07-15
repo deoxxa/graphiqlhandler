@@ -20,9 +20,9 @@ const htmlContent = `
       document.addEventListener('DOMContentLoaded', function () {
         var endpoint = window.location.origin + '/api/v1/graphql';
 
-        var jwt = prompt("Do you have a JWT you'd like to use?", localStorage.get('jwt'));
+        var jwt = prompt("Do you have a JWT you'd like to use?", localStorage.getItem('jwt'));
 
-        localStorage.set('jwt', jwt);
+        localStorage.setItem('jwt', jwt);
 
         function fetcher(params) {
           return fetch(endpoint, {
