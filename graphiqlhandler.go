@@ -18,7 +18,7 @@ const htmlContent = `
     <script src="//cdn.jsdelivr.net/graphiql/0.10.2/graphiql.min.js"></script>
     <script>
       document.addEventListener('DOMContentLoaded', function () {
-        var endpoint = window.location.origin + '/api/v1/graphql';
+        var endpoint = window.location.origin + '__GRAPHQL_PATH__';
 
         var jwt = prompt("Do you have a JWT you'd like to use?", localStorage.getItem('jwt'));
 
@@ -48,14 +48,21 @@ const htmlContent = `
 </html>
 `
 
-type Handler struct{}
+type Handler struct {
+	Path string
+}
 
-func NewHandler() *Handler {
-	return &Handler{}
+func NewHandler(path string) *Handler {
+	return &Handler{Path: path}
 }
 
 func (h *Handler) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	if _, err := io.Copy(rw, strings.NewReader(htmlContent)); err != nil {
+	path := h.Path
+	if path == "" {
+		path = "/graphql"
+	}
+
+	if _, err := io.Copy(rw, strings.NewReader(strings.Replace(htmlContent, "__GRAPHQL_PATH__", path, -1))); err != nil {
 		panic(err)
 	}
 }
